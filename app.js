@@ -9,20 +9,13 @@ if (tg) {
   try { tg.disableVerticalSwipes?.(); } catch {}
   try { tg.setHeaderColor('#0b1016'); tg.setBackgroundColor('#0b1016'); tg.setBottomBarColor?.('#0b1016'); } catch {}
   if (['android', 'ios'].includes(tg.platform)) { try { tg.requestFullscreen?.(); } catch {} }
-  if (tg.initData) {
-    fetch('/api/open', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ initData: tg.initData }),
-    }).catch(() => {});
-  }
 }
 document.getElementById('name').textContent = TITLE;
 
 // ---------- WebGL (без three.js) ----------
 const canvas = document.getElementById('c');
 const gl = canvas.getContext('webgl', { antialias: false, powerPreference: 'high-performance' });
-let scale = Math.min(window.devicePixelRatio || 1, 1.25) * 0.85;
+let scale = Math.min(window.devicePixelRatio || 1, 1.25) * 0.6;
 function resize() {
   canvas.width = Math.round(innerWidth * scale);
   canvas.height = Math.round(innerHeight * scale);
@@ -101,8 +94,8 @@ label();
     // автоподстройка качества под слабые телефоны
     if (raw < 0.2 && time > 2) {
       accT += raw; accN++;
-      if (accT >= 2) {
-        if (accN / accT < 40 && scale > 0.45) { scale *= 0.85; resize(); }
+      if (accT >= 1.5) {
+        if (accN / accT < 40 && scale > 0.35) { scale *= 0.85; resize(); }
         accT = 0; accN = 0;
       }
     }

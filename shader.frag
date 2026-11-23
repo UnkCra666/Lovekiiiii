@@ -1,6 +1,6 @@
 uniform float uTime,uGlide,uHue,uBass;
 uniform vec2 uResolution,uMouse;
-#define MAX_STEPS 64
+#define MAX_STEPS 48
 #define MAX_DIST 28.0
 #define SECTORS 6.0
 #define Z_PERIOD 4.0
@@ -20,7 +20,7 @@ float map(vec3 p,out float orbit,float rt){
  p.xy=vec2(cos(a),sin(a))*length(p.xy);
  p.z=mod(p.z,Z_PERIOD)-Z_PERIOD*0.5;
  p.x-=2.0;
- float lod=clamp((20.0-rt)/14.0,0.0,1.0);
+ float lod=0.0;
  if(lod>0.01){
   vec3 wp=p*1.6+vec3(0.0,0.0,uTime*0.15);
   float w1=vnoise(wp)-0.5;float w2=vnoise(wp+11.3)-0.5;
@@ -35,7 +35,7 @@ float map(vec3 p,out float orbit,float rt){
  mat2 rYZ=rot(0.42+0.22*sin(zEvo));
  mat2 rXZ=rot(-0.23+0.22*cos(zEvo*1.1));
  vec3 off=vec3(2.1+0.22*sin(zEvo*0.7),1.35,0.95+0.18*cos(zEvo));
- for(int i=0;i<9;i++){
+ for(int i=0;i<7;i++){
   p=abs(p);
   if(p.x<p.y)p.xy=p.yx;
   if(p.x<p.z)p.xz=p.zx;
@@ -45,10 +45,8 @@ float map(vec3 p,out float orbit,float rt){
   if(i==2)dC=(length(p.xy)-(0.34+0.10*sin(zEvo*0.8)))/scale;
   if(i==4)dM=(length(p.xy)-(0.22+0.07*sin(zEvo*1.3+1.0)))/scale;
   if(i==6)dF=(length(p.xy)-(0.12+0.04*sin(zEvo*2.1)))/scale;
-  if(i==7)dV=(length(p.xy)-(0.10+0.03*sin(zEvo*2.4)))/scale;
-  if(i==8)dU=(length(p.xy)-(0.09+0.03*sin(zEvo*2.7)))/scale;
- }
- float d=smin(dC,dM,0.20);d=smin(d,dF,0.11);d=smin(d,dV,0.08);d=smin(d,dU,0.06);
+   }
+ float d=smin(dC,dM,0.20);d=smin(d,dF,0.11);
  if(lod>0.01)d-=(vnoise(texP*7.0+vec3(0.0,0.0,uTime*0.1))-0.5)*(0.008*lod);
  d=smax(d,0.5-axialR,0.3);
  return d;
